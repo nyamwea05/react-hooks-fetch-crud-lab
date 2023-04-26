@@ -27,3 +27,85 @@ yarn-error.log*
 
 # Ignore ESLint files
 .eslintcache
+
+
+To fetch data from an API using the useEffect hook, you can do the following steps:
+
+Import useState and useEffect hooks from the 'react' library.
+javascript
+Copy code
+import React, { useState, useEffect } from 'react';
+Inside your functional component, declare a state variable to store the data fetched from the API. You can use the useState hook for this.
+scss
+Copy code
+const [questions, setQuestions] = useState([]);
+In the useEffect hook, make a fetch call to the API endpoint using the fetch function. The fetch function returns a promise, so you can use the .then() method to handle the response.
+scss
+Copy code
+useEffect(() => {
+  fetch('http://localhost:4000/questions')
+    .then(response => response.json())
+    .then(data => setQuestions(data))
+    .catch(error => console.log(error));
+}, []);
+In the above code, we're making a GET request to fetch all questions from the API. Once the response is received, we're converting it to a JSON object using the .json() method and updating the state using the setQuestions() function. The empty array [] passed as the second argument to the useEffect hook ensures that the fetch call is only made once, when the component mounts.
+To display the fetched questions, you can pass the questions state as a prop to the QuestionList component.
+javascript
+Copy code
+return (
+  <div>
+    <h1>Quiz App</h1>
+    <QuestionList questions={questions} />
+  </div>
+);
+To use event handlers with fetch to send data to an API, you can do the following steps:
+
+Declare a state variable to store the form data. You can use the useState hook for this.
+php
+Copy code
+const [formData, setFormData] = useState({
+  prompt: '',
+  answers: ['', '', '', ''],
+  correctIndex: 0
+});
+Define a handleChange function that will update the formData state whenever the user types into the form fields.
+csharp
+Copy code
+const handleChange = (event) => {
+  const { name, value } = event.target;
+  setFormData({ ...formData, [name]: value });
+};
+Define a handleSubmit function that will send the form data to the API when the user submits the form.
+php
+Copy code
+const handleSubmit = (event) => {
+  event.preventDefault();
+  fetch('http://localhost:4000/questions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(response => response.json())
+    .then(data => {
+      setQuestions([...questions, data]);
+      setFormData({
+        prompt: '',
+        answers: ['', '', '', ''],
+        correctIndex: 0
+      });
+    })
+    .catch(error => console.log(error));
+};
+In the above code, we're making a POST request to the API endpoint to create a new question. We're passing the form data in the request body as a JSON string using the JSON.stringify() function. Once the response is received, we're adding the new question to the questions state using the spread operator (...) and resetting the form data to its initial state.
+In the NewQuestion component, you can attach the handleChange and handleSubmit functions to the form fields and the submit button, respectively.
+php
+Copy code
+<form onSubmit={handleSubmit}>
+  <label>Prompt:</label>
+  <input type="text" name="prompt" value={formData.prompt} onChange={handleChange} />
+
+  <label>Answers:</label>
+  <input type="text" name="answers[0]" value={formData.answers[0]} onChange={handleChange} />
+  <input type="text"
